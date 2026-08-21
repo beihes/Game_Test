@@ -1,0 +1,43 @@
+# IDE 文件
+.vs/
+
+# 构建文件
+build/
+Debug/
+out/
+Release/
+CMakeFiles/
+CMakeCache.txt
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+
+# 日志和临时文件
+*.log
+*.tmp
+*.swp
+*.swo
+*.bak
+*.ini
+
+# 包管理
+node_modules/
+packages/
+*.nupkg
+
+# 系统文件
+.DS_Store
+Thumbs.db
+EOF
+
+# 数据库文件
+*.db
+
+assets/config/ffc
+assets/config/ini
+assets/image/
+assets/video/
