@@ -1,3 +1,77 @@
+## 地图
+准备做一个2D平面地图，读取地图数据将其渲染到implot2d的平面上
+
+
+## 运行库下载
+    基于vcpkg的运行库安装
+### 要下载的包
+```powershell
+$packages = @(
+    "sdl3[libusb]",
+    "sdl3-image[avif,jpeg,jxl,png,tiff,webp]",
+    "sdl3-mixer[libflac,libvorbis,mpg123,opusfile]",
+    "sdl3-net",
+    "sdl3-ttf[harfbuzz,svg]",
+    "imgui[core,docking-experimental,freetype,freetype-svg,test-engine,sdl3-renderer-binding,sdl3-binding,wchar32]",
+    "implot",
+    "implot3d",
+    "entt",
+    "glm",
+    "nlohmann-json",
+    "spdlog",
+    "box2d",
+    "aklomp-base64"
+)
+$triplets = @()
+```
+
+### 构建目标
++   Windows
+```powershell
+$triplets += @("x64-windows")
+```
++   Android(arm64-v8a, armeabi-v7a, x86, x86_64)
+```powershell
+$triplets += @("arm64-android-dynamic","arm-neon-android-dynamic","x86-android-dynamic","x64-android-dynamic")
+```
+
+### 最后执行命令
++   仅下载命令
+```powershell
+foreach($triplet in $triplets){
+    $installPackages = $packages | ForEach-Object {"$_`:$triplet"}
+    vcpkg install $installPackages --only-downloads
+}
+```
++   下载安装命令
+```powershell
+foreach($triplet in $triplets){
+    $installPackages = $packages | ForEach-Object {"$_`:$triplet"}
+    vcpkg install $installPackages --recurse
+}
+```
+
+### 运行库的前置库
+    android如果装的是动态库就需要自己手动添加前置库
++   SDL3
+    (BZip2::BZip2 PNG::PNG unofficial::brotli::brotlidec unofficial::brotli::brotlienc )
++   SDL3_image
+    (AOM::aom avif dav1d::dav1d hwy::hwy JPEG::JPEG lcms2::lcms2 liblzma::liblzma libjxl::libjxl libjxl::cms TIFF::TIFF yuv WebP::webp WebP::webpdecoder WebP::webpdemux WebP::libwebpmux WebP::sharpyuv)
++   SDL3_mixer
+    (FLAC::FLAC MPG123::libmpg123 MPG123::libout123 MPG123::libsyn123 Opus::opus Vorbis::vorbis Vorbis::vorbisfile Vorbis::vorbisenc)
++   SDL3_net()
++   SDL3_ttf
+    (Freetype::Freetype harfbuzz::harfbuzz)
++   imgui()
++   implot
++   implot3d
++   entt
++   glm
++   nlohmann-json
++   spdlog
+
+## 使用示例
+
 ```CMake
 
 Total install time: 3.4 h
@@ -180,5 +254,21 @@ sqlitecpp provides CMake targets:
   # this is heuristically generated, and may not be correct
   find_package(SQLiteCpp CONFIG REQUIRED)
   target_link_libraries(main PRIVATE SQLiteCpp)
+
+entt provides CMake targets:
+
+    find_package(EnTT CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE EnTT::EnTT)
+
+box2d provides CMake targets:
+
+  find_package(box2d CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE box2d::box2d)
+
+aklomp-base64 provides CMake targets:
+
+  # this is heuristically generated, and may not be correct
+  find_package(base64 CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE aklomp::base64)
 
 ```

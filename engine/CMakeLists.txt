@@ -17,15 +17,17 @@ file(GLOB_RECURSE ENGINE_SOURCES
 add_library(${CMAKE_PROJECT_NAME} STATIC ${ENGINE_INCLUDE} ${ENGINE_SOURCES})
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR} ${FFMPEG_INCLUDE_DIRS}
 )
 
-# target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC
-# stlcamsdk
-# )
+target_link_directories(${CMAKE_PROJECT_NAME}
+    PRIVATE ${FFMPEG_LIBRARY_DIRS}
+)
+
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
     app
-    hello-imgui::hello_imgui imgui::imgui implot3d::implot3d spdlog::spdlog
+    datetime sdl tiled
+    EnTT::EnTT ${FFMPEG_LIBRARIES} hello-imgui::hello_imgui imgui::imgui implot3d::implot3d spdlog::spdlog
     SDL3::SDL3 $<IF:$<TARGET_EXISTS:SDL3_image::SDL3_image-shared>,SDL3_image::SDL3_image-shared,SDL3_image::SDL3_image-static> $<IF:$<TARGET_EXISTS:SDL3_mixer::SDL3_mixer>,SDL3_mixer::SDL3_mixer,SDL3_mixer::SDL3_mixer-static> $<IF:$<TARGET_EXISTS:SDL3_net::SDL3_net>,SDL3_net::SDL3_net,SDL3_net::SDL3_net-static> SDL3_ttf::SDL3_ttf
 )
 

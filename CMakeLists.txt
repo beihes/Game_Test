@@ -11,6 +11,9 @@ endif()
 
 project("Game_Test")
 
+find_package(base64 CONFIG REQUIRED)
+find_package(box2d CONFIG REQUIRED)
+find_package(EnTT CONFIG REQUIRED)
 find_package(FFMPEG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(GTest CONFIG REQUIRED)
@@ -26,9 +29,11 @@ find_package(SDL3_mixer CONFIG REQUIRED)
 find_package(SDL3_net CONFIG REQUIRED)
 find_package(SDL3_ttf CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
+find_package(ZLIB CONFIG REQUIRED)
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/extension/sdl/inc
 )
 
 # 包含子项目。

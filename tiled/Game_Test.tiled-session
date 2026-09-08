@@ -1,0 +1,78 @@
+{
+    "activeFile": "beach/beach_tileset.tsj",
+    "expandedProjectPaths": [
+        "maps",
+        "beach",
+        "forest",
+        "."
+    ],
+    "file.lastUsedOpenFilter": "全部文件 (*)",
+    "fileStates": {
+        "C:/opt/tiled/examples/rpg/beach_tileset.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        },
+        "C:/opt/tiled/examples/rpg/island.tmx": {
+            "scale": 1.181183510638298,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 425.4207711792851,
+                "y": 376.3174781874472
+            }
+        },
+        "beach/beach_tileset.tsj": {
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        },
+        "forest/forest.tsj": {
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        },
+        "maps/Beach.tmj": {
+            "scale": 8,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 464,
+                "y": 375.8125
+            }
+        },
+        "maps/Home.tmj": {
+            "scale": 1,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 512.5,
+                "y": 384
+            }
+        },
+        "maps/beach_tileset.tsj": {
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        }
+    },
+    "frame.defaultDuration": 250,
+    "last.imagePath": "D:/MyCode/VisualStudio/CMake/Game_Test/tiled/forest",
+    "map.height": 24,
+    "map.lastUsedFormat": "json",
+    "map.width": 32,
+    "openFiles": [
+        "maps/Beach.tmj",
+        "maps/Home.tmj",
+        "forest/forest.tsj",
+        "beach/beach_tileset.tsj"
+    ],
+    "project": "Game_Test.tiled-project",
+    "recentFiles": [
+        "maps/Beach.tmj",
+        "maps/Home.tmj",
+        "forest/forest.tsj",
+        "beach/beach_tileset.tsj",
+        "maps/beach_tileset.tsj",
+        "C:/opt/tiled/examples/rpg/beach_tileset.tsx",
+        "C:/opt/tiled/examples/rpg/island.tmx"
+    ],
+    "tileset.lastUsedFormat": "json",
+    "tileset.tileSize": {
+        "height": 32,
+        "width": 32
+    }
+}
