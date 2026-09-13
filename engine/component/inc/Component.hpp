@@ -16,13 +16,8 @@ namespace engine::core {
     class Context;
 }
 
-namespace engine::object {
-    class Object;
-}
-
 namespace engine::component {
     class Component {
-        friend class object::Object;
     public:
         Component();
         virtual ~Component();// 虚函数确保正确清理派生类
@@ -39,11 +34,6 @@ namespace engine::component {
         virtual void Update([[maybe_unused]] float deltaTime, [[maybe_unused]] core::Context& context) {};//更新
         virtual void Render([[maybe_unused]] core::Context& context) {};//渲染
         virtual void Clean() {};//清理
-    public:
-        void Set_Owner(object::Object* owner) { this->owner_ = owner; }
-        object::Object* Get_Owner()const { return this->owner_; }
-    protected:
-        object::Object* owner_ = nullptr;
     private:
         const char* Get_ClassName() const {
             return typeid(*this).name();

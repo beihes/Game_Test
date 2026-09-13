@@ -1,4 +1,5 @@
 #include "../inc/AppContext.hpp"
+#include "../inc/AppScene.hpp"
 #include "engine/core/inc/Context.hpp"
 #include "engine/resource/inc/ResourceManager.hpp"
 #include "engine/resource/inc/TextureManager.hpp"
@@ -7,8 +8,8 @@
 #include <spdlog/fmt/bin_to_hex.h>
 
 namespace app::scene {
-    AppContext::AppContext(engine::core::Context& context, engine::scene::SceneManager& sceneManager)
-        :context_(context), sceneManager_(sceneManager) {
+    AppContext::AppContext(AppScene& appScene, engine::core::Context& context, engine::scene::SceneManager& sceneManager)
+        :appScene_(appScene), context_(context), sceneManager_(sceneManager) {
         spdlog::trace("[{}]AppContext 构建完成", this->Get_ClassName());
     }
 

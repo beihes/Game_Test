@@ -45,10 +45,13 @@ namespace engine::core {
         const std::string& Get_ImageContents()const;
         const std::string& Get_VideoContents()const;
         const std::unordered_map<std::string, std::vector<std::string>>& Get_KeyMap()const;
+    public:
+        const char* logFilePath_ = "assets/logs/main.log";
+        const char* loggerName_ = "main";
     private:
         /* 窗口配置方面 */
         SDL_InitFlags initFlags = SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_CAMERA;
-        SDL_WindowFlags windowFlags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIDDEN | SDL_WINDOW_HIGH_PIXEL_DENSITY /* | SDL_WINDOW_VULKAN */ /* | SDL_WINDOW_MAXIMIZED */ /* | SDL_WINDOW_OPENGL */ /* | SDL_WINDOW_BORDERLESS */;
+        SDL_WindowFlags windowFlags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIDDEN | SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_VULKAN /* | SDL_WINDOW_MAXIMIZED */ /* | SDL_WINDOW_OPENGL */ /* | SDL_WINDOW_BORDERLESS */;
         float mainScale = 1.0;
         std::string windowTitle = "Game-Test";
         SDL_Point windowSize = { 1280,800 };

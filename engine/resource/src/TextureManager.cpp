@@ -11,6 +11,28 @@ namespace engine::resource {
         spdlog::trace("[{}]TextureManager 析构完成", this->Get_ClassName());
     }
 
+    SDL_Texture* TextureManager::Insert(std::string_view texturePath) {
+        if (texturePath.empty()) { return nullptr; }
+        auto midTexture_1Ptr = IMG_LoadTexture(this->renderer_, texturePath.data());
+        if (!midTexture_1Ptr) {
+            spdlog::warn("[{}]图片 '{}' 插入 Texture 管理器失败", this->Get_ClassName(), texturePath);
+            return nullptr;
+        }
+        auto midTexturePtr = raii::SDL_TexturePtr(midTexture_1Ptr);
+        if (!midTexture_1Ptr) {
+            spdlog::warn("[{}]图片 '{}' 插入 Texture 管理器失败", this->Get_ClassName(), texturePath);
+            SDL_DestroyTexture(midTexture_1Ptr);
+            return nullptr;
+        }
+        auto [insertIt, result] = this->textures_.insert_or_assign(texturePath.data(), std::move(midTexturePtr));
+        if (!result) {
+            spdlog::warn("[{}]图片 '{}' 插入 Texture 管理器失败", this->Get_ClassName(), texturePath);
+            return nullptr;
+        }
+        spdlog::trace("[{}]图片 '{}' 插入 Texture 管理器成功", this->Get_ClassName(), texturePath);
+        return insertIt->second.get();
+    }
+
     SDL_Texture* TextureManager::Insert(std::string_view midName, SDL_Surface* midSurface_Ptr) {
         if (!midSurface_Ptr || midName.empty()) {
             spdlog::error("[{}]插入 '{}' texture失败, Surface 为空或者midNum为空", this->Get_ClassName(), midName);
@@ -27,7 +49,7 @@ namespace engine::resource {
                 spdlog::error("[{}]插入 '{}' texture 失败: {}", this->Get_ClassName(), midName, SDL_GetError());
                 return nullptr;
             }
-            auto midTexturePtr = sdl::SDL_TexturePtr(midTexture_Ptr);
+            auto midTexturePtr = raii::SDL_TexturePtr(midTexture_Ptr);
             if (!midTexturePtr) {
                 spdlog::error("[{}]插入 '{}' texture 失败", this->Get_ClassName(), midName);
                 SDL_DestroyTexture(midTexture_Ptr);
@@ -67,7 +89,7 @@ namespace engine::resource {
             return nullptr;
         }
         auto midData = this->textures_.find(midName.data());
-        auto midTexturePtr = sdl::SDL_TexturePtr(midTexture);
+        auto midTexturePtr = raii::SDL_TexturePtr(midTexture);
         if (!midTexturePtr) {
             spdlog::error("[{}]插入 '{}' texture失败时创建失败", this->Get_ClassName(), midName);
             return nullptr;
@@ -81,7 +103,7 @@ namespace engine::resource {
         return insertIt->second.get();
     }
 
-    SDL_Texture* TextureManager::Insert(std::string_view midName, sdl::SDL_TexturePtr&& midTexturePtr) {
+    SDL_Texture* TextureManager::Insert(std::string_view midName, raii::SDL_TexturePtr&& midTexturePtr) {
         if (!midTexturePtr || midName.empty()) {
             spdlog::error("[{}]插入 '{}' texture 失败, Texture 为空或者 midNum 为空", this->Get_ClassName(), midName);
             return nullptr;
@@ -118,7 +140,7 @@ namespace engine::resource {
         for (auto& it : this->textures_) {
             spdlog::trace("[{}]准备删除 Texture : '{}'", this->Get_ClassName(), it.first);
         }
-        spdlog::debug("[{}]删除 Texture : {}", this->Get_ClassName(), this->textures_.size());
+        spdlog::trace("[{}]删除 Texture : {}", this->Get_ClassName(), this->textures_.size());
         this->textures_.clear();
     }
 }

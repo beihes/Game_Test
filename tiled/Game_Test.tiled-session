@@ -1,10 +1,10 @@
 {
-    "activeFile": "beach/beach_tileset.tsj",
+    "activeFile": "maps/Beach.tmj",
     "expandedProjectPaths": [
         "maps",
+        ".",
         "beach",
-        "forest",
-        "."
+        "forest"
     ],
     "file.lastUsedOpenFilter": "全部文件 (*)",
     "fileStates": {
@@ -29,11 +29,11 @@
             "scaleInEditor": 2
         },
         "maps/Beach.tmj": {
-            "scale": 8,
-            "selectedLayer": 1,
+            "scale": 4,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 464,
-                "y": 375.8125
+                "x": 460.5,
+                "y": 450.125
             }
         },
         "maps/Home.tmj": {
@@ -62,10 +62,10 @@
     ],
     "project": "Game_Test.tiled-project",
     "recentFiles": [
-        "maps/Beach.tmj",
-        "maps/Home.tmj",
-        "forest/forest.tsj",
         "beach/beach_tileset.tsj",
+        "forest/forest.tsj",
+        "maps/Home.tmj",
+        "maps/Beach.tmj",
         "maps/beach_tileset.tsj",
         "C:/opt/tiled/examples/rpg/beach_tileset.tsx",
         "C:/opt/tiled/examples/rpg/island.tmx"

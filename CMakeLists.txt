@@ -14,11 +14,9 @@ project("Game_Test")
 find_package(base64 CONFIG REQUIRED)
 find_package(box2d CONFIG REQUIRED)
 find_package(EnTT CONFIG REQUIRED)
-find_package(FFMPEG REQUIRED)
+# find_package(FFMPEG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(GTest CONFIG REQUIRED)
-find_package(hello-imgui CONFIG REQUIRED)
-find_package(ICU REQUIRED COMPONENTS uc)
 find_package(imgui CONFIG REQUIRED)
 find_package(implot CONFIG REQUIRED)
 find_package(implot3d CONFIG REQUIRED)
@@ -33,7 +31,8 @@ find_package(ZLIB CONFIG REQUIRED)
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/extension/sdl/inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/extension/tiled/inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/extension/raii/inc
 )
 
 # 包含子项目。

@@ -9,13 +9,21 @@
 #include "scene/inc/SceneManager.hpp"
 #include "app/scene/inc/AppScene.hpp"
 #include <datetime/datetime.hpp>
-#include <hello_imgui/hello_imgui.h>
-#include <hello_imgui/icons_font_awesome_6.h>
+#include <font/icons_font_awesome_6.h>
+#include <threme/theme.hpp>
 #include <implot.h>
 #include <implot3d.h>
 #include <spdlog/spdlog.h>
+#include <spdlog/async.h>
+#include <spdlog/sinks/daily_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 namespace engine::core {
+    Core::~Core() {
+        spdlog::trace("[{}]Core 析构完成", this->Get_ClassName());
+        spdlog::shutdown();
+    }
+
     bool Core::Init() {
 #ifdef _DEBUG
         spdlog::set_level(spdlog::level::trace);
@@ -23,6 +31,7 @@ namespace engine::core {
         spdlog::set_level(spdlog::level::info);
 #endif
         if (!this->Init_Config()) { return false; }
+        if (!this->Init_Spdlog()) { return false; }
         if (!this->Init_SDL()) { return false; }
         if (!this->Init_Timer()) { return false; }
         if (!this->Init_InputManager()) { return false; }
@@ -50,6 +59,29 @@ namespace engine::core {
         return true;
     }
 
+    bool Core::Init_Spdlog() {
+        spdlog::init_thread_pool(16384, 1);
+        try {
+            auto dailySink = std::make_shared<spdlog::sinks::daily_file_sink_mt>(this->config_->logFilePath_, 0, 0);
+            auto consoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+
+            // 3. 创建异步 Logger，并添加多个 Sink
+            //    注意：所有 Sink 共享同一个线程池
+            std::vector<spdlog::sink_ptr> sinks = { dailySink, consoleSink };
+            auto logger = std::make_shared<spdlog::async_logger>(this->config_->loggerName_, sinks.begin(), sinks.end(), spdlog::thread_pool(), spdlog::async_overflow_policy::block);
+            spdlog::set_default_logger(logger); // 设为默认，方便全局调用
+#ifdef _DEBUG
+            spdlog::set_level(spdlog::level::trace);
+#else
+            spdlog::set_level(spdlog::level::debug);
+#endif
+        } catch (const spdlog::spdlog_ex& e) {
+            spdlog::error("[{}]spdlog 初始化失败: {}", __func__, e.what());
+            return false;
+        }
+        return true;
+    }
+
     bool Core::Init_SDL() {
         if (!SDL_Init(this->config_->Get_InitFlags())) {
             spdlog::error("[{}]SDL 初始化失败: {}\n", this->Get_ClassName(), SDL_GetError());
@@ -61,23 +93,25 @@ namespace engine::core {
             spdlog::error("[{}]创建 windows 失败: {}", this->Get_ClassName(), SDL_GetError());
             return false;
         }
-        this->window_ = sdl::SDL_WindowPtr(midWindow_Ptr);
+        this->window_ = raii::SDL_WindowPtr(midWindow_Ptr);
         if (!this->window_) {
             spdlog::error("[{}]创建 windows 失败", this->Get_ClassName());
-            sdl::SDL_WindowDelete()(midWindow_Ptr);
+            raii::SDL_WindowDelete()(midWindow_Ptr);
             return false;
         }
-        auto midRenderer_Ptr = SDL_CreateRenderer(this->window_.get(), nullptr);
+        auto midRenderer_Ptr = SDL_CreateRenderer(this->window_.get(), "vulkan");
         if (midRenderer_Ptr == nullptr) {
             spdlog::error("[{}]创建 SDL_Renderer 失败: {}", this->Get_ClassName(), SDL_GetError());
             return false;
         }
-        this->renderer_ = sdl::SDL_RendererPtr(midRenderer_Ptr);
+        this->renderer_ = raii::SDL_RendererPtr(midRenderer_Ptr);
         if (!this->renderer_) {
             spdlog::error("[{}]创建 SDL_RendererPtr 失败", this->Get_ClassName());
-            sdl::SDL_RendererDelete()(midRenderer_Ptr);
+            raii::SDL_RendererDelete()(midRenderer_Ptr);
             return false;
         }
+        const char* name = SDL_GetRendererName(midRenderer_Ptr);
+        spdlog::trace("[{}]Renderer 后端: {}", this->Get_ClassName(), name ? name : "Unknown");
         SDL_SetRenderVSync(this->renderer_.get(), this->config_->Get_VSyncState());
         SDL_SetWindowPosition(this->window_.get(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
         SDL_SetWindowMinimumSize(this->window_.get(), this->config_->Get_WindowSize().x, this->config_->Get_WindowSize().y);
@@ -124,7 +158,7 @@ namespace engine::core {
         // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
         //io.ConfigViewportsNoAutoMerge = true;
         //io.ConfigViewportsNoTaskBarIcon = true;
-        auto midData = ImGuiTheme::ThemeToStyle(ImGuiTheme::ImGuiTheme_Darcula);
+        auto midData = theme::ThemeToStyle(theme::ImGuiTheme_Darcula);
         style = midData;
         style.ScaleAllSizes(this->config_->Get_MainScale());        // Bake a fixed style scale. (until we have a solution for dynamic style scaling, changing this requires resetting Style + calling this again)
         style.FontScaleDpi = this->config_->Get_MainScale();        // Set initial font scale. (in docking branch: using io.ConfigDpiScaleFonts=true automatically overrides this for every window depending on the current monitor)
@@ -193,10 +227,10 @@ namespace engine::core {
             spdlog::error("[{}]SDL_Tray 创建失败: {}", this->Get_ClassName(), SDL_GetError());
             return false;
         }
-        this->trayType_.tray = sdl::SDL_TrayPtr(midTray_Ptr);
+        this->trayType_.tray = raii::SDL_TrayPtr(midTray_Ptr);
         if (!this->trayType_.tray) {
             spdlog::error("[{}]SDL_Tray 创建失败", this->Get_ClassName());
-            sdl::SDL_TrayDelete()(midTray_Ptr);
+            raii::SDL_TrayDelete()(midTray_Ptr);
             return false;
         }
         this->trayType_.menu = SDL_CreateTrayMenu(this->trayType_.tray.get());/* 为托盘创建右键菜单 */
@@ -205,12 +239,12 @@ namespace engine::core {
             return false;
         }
 
-        // // 3. 在菜单中添加一个“退出”按钮
-        // SDL_TrayEntry* entry = SDL_InsertTrayEntryAt(this->trayType_.menu, -1, "退出", SDL_TRAYENTRY_BUTTON);
-        // this->trayType_.entry.insert(entry, );
+        // 3. 在菜单中添加一个“退出”按钮
+        SDL_TrayEntry* entry = SDL_InsertTrayEntryAt(this->trayType_.menu, -1, "退出", SDL_TRAYENTRY_BUTTON);
+        this->trayType_.entry.emplace(entry, std::pair<SDL_TrayCallback, void*>(Core::Quit_TryCallback, this));
 
-        // // 4. 绑定回调函数
-        // SDL_SetTrayEntryCallback(entry, callback_quit, NULL);
+        // 4. 绑定回调函数
+        SDL_SetTrayEntryCallback(entry, Core::Quit_TryCallback, this);
         return true;
     }
 
@@ -249,11 +283,22 @@ namespace engine::core {
     }
 
     void Core::Clean() {
+        if (this->context_) {
+            this->context_.reset();
+        }
         if (this->sceneManager_) {
             this->sceneManager_->Clean();
+            this->sceneManager_.reset();
         }
         if (this->resourceManager_) {
             this->resourceManager_->Clean();
+            this->resourceManager_.reset();
+        }
+        if (this->inputManager_) {
+            this->inputManager_.reset();
+        }
+        if (this->timer_) {
+            this->timer_.reset();
         }
         if (this->imguiInitState_) {
             ImGui_ImplSDLRenderer3_Shutdown();
@@ -261,16 +306,16 @@ namespace engine::core {
             ImPlot3D::DestroyContext();
             ImPlot::DestroyContext();
             ImGui::DestroyContext();
+            this->imguiInitState_ = false;
+            this->renderer_.reset();
+            this->window_.reset();
+            this->trayType_.tray.reset();
+            SDL_Quit();
+            spdlog::trace("[{}]资源全部清理完毕", this->Get_ClassName());
         }
-
-        SDL_DestroyRenderer(this->renderer_.get());
-        this->renderer_ = nullptr;
-        SDL_DestroyWindow(this->window_.get());
-        this->window_ = nullptr;
-        SDL_DestroyTray(this->trayType_.tray.get());
-        this->trayType_.tray = nullptr;
-        SDL_Quit();
-        spdlog::trace("[{}]资源全部清理完毕", this->Get_ClassName());
+        if (this->config_) {
+            this->config_.reset();
+        }
     }
 
     bool Core::Get_RunningState()const {
@@ -283,5 +328,14 @@ namespace engine::core {
 
     datetime::Timer& Core::Get_Timer() {
         return *this->timer_.get();
+    }
+
+    void Core::Quit_TryCallback(void* userdata, SDL_TrayEntry* entry) {
+        if (!userdata || !entry) {
+            return;
+        }
+        auto midCore = static_cast<Core*>(userdata);
+        midCore->appResult_.store(SDL_APP_SUCCESS);
+        midCore->runningState_ = false;
     }
 } // namespace engine::core

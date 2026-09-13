@@ -21,7 +21,6 @@ namespace engine::core {
 
 namespace engine::component {
     class TransformComponent final : public component::Component {
-        friend class object::Object;//友元不能继承，必须每个子类单独添加
     public:
         explicit TransformComponent(const glm::vec3& position, const glm::vec3& scale, const glm::quat& roate);
         explicit TransformComponent(const glm::mat4& matrix);

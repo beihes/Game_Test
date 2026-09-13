@@ -18,7 +18,7 @@ namespace engine::resource {
             spdlog::warn("[{}]图片 '{}' 插入 Surface 管理器失败", this->Get_ClassName(), surfacePath);
             return nullptr;
         }
-        auto midSurfacePtr = sdl::SDL_SurfacePtr(midSurface_Ptr);
+        auto midSurfacePtr = raii::SDL_SurfacePtr(midSurface_Ptr);
         if (!midSurface_Ptr) {
             spdlog::warn("[{}]图片 '{}' 插入 Surface 管理器失败", this->Get_ClassName(), surfacePath);
             SDL_DestroySurface(midSurface_Ptr);
@@ -46,7 +46,7 @@ namespace engine::resource {
                 return nullptr;
             }
             if (needLock) { SDL_UnlockSurface(midSurface); }
-            auto midSurfacePtr = sdl::SDL_SurfacePtr(midSurface_Ptr);
+            auto midSurfacePtr = raii::SDL_SurfacePtr(midSurface_Ptr);
             if (!midSurfacePtr) {
                 spdlog::warn("[{}]图片 '{}' 插入 Surface 管理器失败", this->Get_ClassName(), midName);
                 SDL_DestroySurface(midSurface_Ptr);
@@ -79,7 +79,7 @@ namespace engine::resource {
         return midData->second.get();
     }
 
-    SDL_Surface* SurfaceManager::Insert(std::string_view midName, sdl::SDL_SurfacePtr&& midSurfacePtr) {
+    SDL_Surface* SurfaceManager::Insert(std::string_view midName, raii::SDL_SurfacePtr&& midSurfacePtr) {
         if (!midSurfacePtr || midName.empty()) { return nullptr; }
         auto [insertIt, result] = this->surfaces_.insert_or_assign(midName.data(), std::move(midSurfacePtr));
         if (!result) {

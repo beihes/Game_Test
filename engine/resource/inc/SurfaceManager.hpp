@@ -10,7 +10,7 @@ extern "C" {
 }
 #endif // __cplusplus
 
-#include "sdl.hpp"
+#include <raii/sdlRaii.hpp>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -26,13 +26,13 @@ namespace engine::resource {
         /* 这个会将传入的 Surface 复制一份 */
         SDL_Surface* Insert(std::string_view midName, SDL_Surface* midSurface);
         /* 此方式会将传入的智能指针据为己有 */
-        SDL_Surface* Insert(std::string_view midName, sdl::SDL_SurfacePtr&& midSurfacePtr);
+        SDL_Surface* Insert(std::string_view midName, raii::SDL_SurfacePtr&& midSurfacePtr);
         SDL_Surface* Search(std::string_view midName);
         bool Delete(std::string_view midName);
     public:
         void Clean();
     private:
-        std::unordered_map<std::string, sdl::SDL_SurfacePtr> surfaces_;
+        std::unordered_map<std::string, raii::SDL_SurfacePtr> surfaces_;
     private:
         const char* Get_ClassName() const {
             return typeid(*this).name();

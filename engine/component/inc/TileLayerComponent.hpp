@@ -27,7 +27,6 @@ namespace tiled {
 namespace engine::component {
     class TransformComponent;
     class TileLayerComponent final : public component::Component {
-        friend class object::Object;//友元不能继承，必须每个子类单独添加
     public:
         TileLayerComponent();
         ~TileLayerComponent()override;

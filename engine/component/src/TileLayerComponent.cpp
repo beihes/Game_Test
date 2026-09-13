@@ -1,6 +1,5 @@
 #include "../inc/TileLayerComponent.hpp"
 #include "../inc/TransformComponent.hpp"
-#include "object/inc/Object.hpp"
 #include "core/inc/Context.hpp"
 #include <tiled/tiled.hpp>
 #include <spdlog/spdlog.h>
@@ -15,7 +14,7 @@ namespace engine::component {
     }
 
     void TileLayerComponent::Init() {
-        this->transformComponent_ = this->owner_ ? this->owner_->Get_Component<TransformComponent>() : nullptr;
+        // this->transformComponent_ = this->owner_ ? this->owner_->Get_Component<TransformComponent>() : nullptr;
     }
 
     void TileLayerComponent::Update([[maybe_unused]] float deltaTime, [[maybe_unused]] core::Context& context) {

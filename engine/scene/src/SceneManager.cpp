@@ -55,10 +55,8 @@ namespace engine::scene {
             return;
         }
         spdlog::trace("[{}]正在将场景 '{}' 压入栈。", this->Get_ClassName(), scene->Get_Name());
-        // 初始化新场景
-        if (!scene->Get_InitState()) { scene->Init(); }// 确保只初始化一次
-        // 将新场景移入栈顶
-        this->sceneStack_.push_back(std::move(scene));
+        this->sceneStack_.push_back(std::move(scene));/* 将新场景移入栈顶 */
+        this->sceneStack_.back()->Init();/* 初始化新场景 */
     }
 
     void SceneManager::Pop_Scene() {

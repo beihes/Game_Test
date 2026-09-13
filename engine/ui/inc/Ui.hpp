@@ -4,8 +4,8 @@
 extern "C" {
 #endif // __cplusplus
 #include <SDL3/SDL.h>
-// #include <SDL3_image/SDL_image.h>
-    //#include <SDL3_ttf/SDL_ttf.h>
+    // #include <SDL3_image/SDL_image.h>
+        //#include <SDL3_ttf/SDL_ttf.h>
 #ifdef __cplusplus
 }
 #endif // __cplusplus
@@ -27,7 +27,7 @@ namespace engine::ui {
     public:
         void Set_Name(std::string_view name) { this->name_ = name; }               ///< @brief 设置场景名称
         const std::string Get_Name() const { return this->name_; }                  ///< @brief 获取场景名称
-        void Set_Initialized(bool initialized) { this->initState_ = initialized; }    ///< @brief 设置场景是否已初始化
+        void Set_InitState(bool initialized) { this->initState_ = initialized; }    ///< @brief 设置场景是否已初始化
         bool Get_InitState() const { return this->initState_; }                      ///< @brief 获取场景是否已初始化
         void Set_WindowFlags(ImGuiWindowFlags midWindowFlags) { this->windowFlags_ = midWindowFlags; }
         ImGuiWindowFlags Get_WindowFlags()const { return this->windowFlags_; }

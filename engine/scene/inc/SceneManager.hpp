@@ -4,8 +4,8 @@
 extern "C" {
 #endif // __cplusplus
 #include <SDL3/SDL.h>
-// #include <SDL3_image/SDL_image.h>
-    // #include <SDL3_ttf/SDL_ttf.h>
+    // #include <SDL3_image/SDL_image.h>
+        // #include <SDL3_ttf/SDL_ttf.h>
 #ifdef __cplusplus
 }
 #endif // __cplusplus
@@ -28,13 +28,9 @@ namespace engine::scene {
      */
     class SceneManager final {
     public:
-        SceneManager() = delete;
         /**
         * @brief 构造函数。
-        *
-        * @param name 场景的名称。
         * @param context 场景上下文。
-        * @param scene_manager 场景管理器。
         */
         explicit SceneManager(core::Context& context);
         ~SceneManager();

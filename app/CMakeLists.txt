@@ -24,7 +24,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
 # )
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
     engine
-    hello-imgui::hello_imgui imgui::imgui implot3d::implot3d spdlog::spdlog
+    imgui::imgui implot3d::implot3d spdlog::spdlog
     SDL3::SDL3 $<IF:$<TARGET_EXISTS:SDL3_image::SDL3_image-shared>,SDL3_image::SDL3_image-shared,SDL3_image::SDL3_image-static> $<IF:$<TARGET_EXISTS:SDL3_mixer::SDL3_mixer>,SDL3_mixer::SDL3_mixer,SDL3_mixer::SDL3_mixer-static> $<IF:$<TARGET_EXISTS:SDL3_net::SDL3_net>,SDL3_net::SDL3_net,SDL3_net::SDL3_net-static> SDL3_ttf::SDL3_ttf
 )
 

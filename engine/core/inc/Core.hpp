@@ -12,7 +12,7 @@ extern "C" {
 #endif // __cplusplus
 
 #include <datetime/datetime.hpp>
-#include "sdl.hpp"
+#include <raii/sdlRaii.hpp>
 #include <imgui.h>
 #include <imgui_impl_sdlrenderer3.h>
 #include <imgui_impl_sdl3.h>
@@ -39,11 +39,12 @@ namespace engine::core {
     class Core final {
     public:
         Core() = default;
-        ~Core() = default;
+        ~Core();
     public:
         bool Init();
     private:
         bool Init_Config();
+        bool Init_Spdlog();
         bool Init_SDL();
         bool Init_Timer();
         bool Init_InputManager();
@@ -62,6 +63,8 @@ namespace engine::core {
         SDL_AppResult Get_AppResult()const;
         datetime::Timer& Get_Timer();
     private:
+        static void Quit_TryCallback(void* userdata, SDL_TrayEntry* entry);
+    private:
         ImGuiID dockspaceId;
         ImVec4 backColor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     private:
@@ -73,9 +76,9 @@ namespace engine::core {
         std::unique_ptr<scene::SceneManager> sceneManager_;
         std::vector<SDL_TrayCallback> trayCallback;
     private:
-        sdl::SDL_WindowPtr window_;
-        sdl::SDL_TrayType trayType_;
-        sdl::SDL_RendererPtr renderer_;
+        raii::SDL_WindowPtr window_;
+        raii::SDL_TrayType trayType_;
+        raii::SDL_RendererPtr renderer_;
         /* SDL_AppResult */
         bool runningState_ = false;
         bool imguiInitState_ = false;

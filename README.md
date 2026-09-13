@@ -7,16 +7,17 @@
 ### 要下载的包
 ```powershell
 $packages = @(
-    "sdl3[libusb]",
+    "sdl3[libusb,vulkan]",
     "sdl3-image[avif,jpeg,jxl,png,tiff,webp]",
     "sdl3-mixer[libflac,libvorbis,mpg123,opusfile]",
     "sdl3-net",
     "sdl3-ttf[harfbuzz,svg]",
-    "imgui[core,docking-experimental,freetype,freetype-svg,test-engine,sdl3-renderer-binding,sdl3-binding,wchar32]",
+    "imgui[core,docking-experimental,freetype,freetype-svg,test-engine,sdl3-renderer-binding,sdl3-binding,vulkan-binding,wchar32]",
     "implot",
     "implot3d",
     "entt",
     "glm",
+    "gtest",
     "nlohmann-json",
     "spdlog",
     "box2d",
@@ -51,6 +52,9 @@ foreach($triplet in $triplets){
 }
 ```
 
+## 运行库删除
+
+
 ### 运行库的前置库
     android如果装的是动态库就需要自己手动添加前置库
 +   SDL3
@@ -70,55 +74,42 @@ foreach($triplet in $triplets){
 +   nlohmann-json
 +   spdlog
 
-## 使用示例
-
+## LICENSE
 ```CMake
-
-Total install time: 3.4 h
-Installed contents are licensed to you by owners. Microsoft is not responsible for, nor does it grant any licenses to, third-party packages.
-Some packages did not declare an SPDX license. Check the `copyright` file for each package for more information about their licensing.
 Packages installed in this vcpkg installation declare the following licenses:
-(BSD-2-Clause OR BSD-3-Clause OR Artistic-1.0 OR GPL-2.0-only OR LGPL-2.0-only)
+(Apache-2.0 OR MIT)
+(FTL OR GPL-2.0-or-later)
 Apache-2.0
 BSD-2-Clause
 BSD-3-Clause
-ICU
+ISC
 LGPL-2.1-or-later
 MIT
 MIT-Modern-Variant
-Python-2.0
 Zlib
-blessing
+bzip2-1.0.6
+libpng-2.0
 libtiff
-ffmpeg provides CMake integration:
+```
 
-  find_package(FFMPEG REQUIRED)
-  target_include_directories(main PRIVATE ${FFMPEG_INCLUDE_DIRS})
-  target_link_directories(main PRIVATE ${FFMPEG_LIBRARY_DIRS})
-  target_link_libraries(main PRIVATE ${FFMPEG_LIBRARIES})
+## 使用示例
 
-ffmpeg provides pkg-config modules:
+```CMake
+aklomp-base64 provides CMake targets:
 
-  # FFmpeg codec library
-  libavcodec
+  # this is heuristically generated, and may not be correct
+  find_package(base64 CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE aklomp::base64)
 
-  # FFmpeg device handling library
-  libavdevice
+box2d provides CMake targets:
 
-  # FFmpeg audio/video filtering library
-  libavfilter
+  find_package(box2d CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE box2d::box2d)
 
-  # FFmpeg container format library
-  libavformat
+entt provides CMake targets:
 
-  # FFmpeg utility library
-  libavutil
-
-  # FFmpeg audio resampling library
-  libswresample
-
-  # FFmpeg image rescaling library
-  libswscale
+    find_package(EnTT CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE EnTT::EnTT)
 
 The package glm provides CMake targets:
 
@@ -149,54 +140,6 @@ imgui provides CMake targets:
   find_package(imgui CONFIG REQUIRED)
   target_link_libraries(main PRIVATE imgui::imgui)
 
-hello-imgui provides CMake integration:
-
-  set(CMAKE_CXX_STANDARD 17)
-  find_package(hello-imgui CONFIG REQUIRED)
-  # Usage with `hello_imgui_add_app` (recommended)
-  hello_imgui_add_app(main my_main.cpp)
-  # Usage with `target_link_libraries` (no tooling, no asset deployment)
-  target_link_libraries(main PRIVATE hello-imgui::hello_imgui)
-
-    ########################################################################
-       !!!!                    WARNING                              !!!!!
-       !!!!   Installed hello-imgui without a viable backend        !!!!!
-    ########################################################################
-
-    When installing hello-imgui, you should specify:
-
-     - At least one (or more) rendering backend (OpenGL3, Metal, Vulkan, DirectX11, DirectX12)
-       Make your choice according to your needs and your target platforms, between:
-          opengl3-binding              # This is the recommended choice, especially for beginners
-          metal-binding                # Apple only, advanced users only
-          experimental-vulkan-binding  # Advanced users only
-          experimental-dx11-binding    # Windows only, still experimental
-          experimental-dx12-binding    # Windows only, advanced users only, still experimental
-
-     - At least one (or more) platform backend (Glfw3*):
-       Make your choice according to your needs and your target platforms, between:
-          glfw-binding
-       *) This port currently does not offer an SDL platform backend.
-
-    For example, you could use:
-        vcpkg install "hello-imgui[opengl3-binding,glfw-binding]"
-
-    ########################################################################
-       !!!!                    WARNING                              !!!!!
-       !!!!   Installed hello-imgui without a viable backend        !!!!!
-    ########################################################################
-
-icu provides pkg-config modules:
-
-  # International Components for Unicode: Internationalization library
-  icu-i18n
-
-  # International Components for Unicode: Stream and I/O Library
-  icu-io
-
-  # International Components for Unicode: Common and Data libraries
-  icu-uc
-
 implot provides CMake targets:
 
   # this is heuristically generated, and may not be correct
@@ -209,11 +152,18 @@ implot3d provides CMake targets:
   find_package(implot3d CONFIG REQUIRED)
   target_link_libraries(main PRIVATE implot3d::implot3d)
 
-nativefiledialog-extended provides CMake targets:
+The package nlohmann-json provides CMake targets:
 
-  # this is heuristically generated, and may not be correct
-  find_package(nfd CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE nfd::nfd)
+    find_package(nlohmann_json CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE nlohmann_json::nlohmann_json)
+
+The package nlohmann-json can be configured to not provide implicit conversions via a custom triplet file:
+
+    set(nlohmann-json_IMPLICIT_CONVERSIONS OFF)
+
+For more information, see the docs here:
+
+    https://json.nlohmann.me/api/macros/json_use_implicit_conversions/
 
 sdl3-image provides CMake targets:
 
@@ -248,27 +198,5 @@ The package spdlog provides CMake targets:
     # Or use the header-only version
     find_package(spdlog CONFIG REQUIRED)
     target_link_libraries(main PRIVATE spdlog::spdlog_header_only)
-
-sqlitecpp provides CMake targets:
-
-  # this is heuristically generated, and may not be correct
-  find_package(SQLiteCpp CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE SQLiteCpp)
-
-entt provides CMake targets:
-
-    find_package(EnTT CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE EnTT::EnTT)
-
-box2d provides CMake targets:
-
-  find_package(box2d CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE box2d::box2d)
-
-aklomp-base64 provides CMake targets:
-
-  # this is heuristically generated, and may not be correct
-  find_package(base64 CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE aklomp::base64)
 
 ```

@@ -1,5 +1,8 @@
 #include "../inc/AppScene.hpp"
 #include "../inc/AppContext.hpp"
+#include "tiled/inc/Map.hpp"
+#include "tiled/inc/MapManager.hpp"
+#include "ui/inc/TestUi.hpp"
 #include "engine/core/inc/Config.hpp"
 #include "engine/core/inc/Context.hpp"
 #include "engine/input/inc/InputManager.hpp"
@@ -20,7 +23,7 @@ namespace app::scene {
 
     void AppScene::Init() {
         Scene::Init();
-        this->appContext_ = std::make_unique<AppContext>(this->context_, this->sceneManager_);
+        this->appContext_ = std::make_unique<AppContext>(*this, this->context_, this->sceneManager_);
         if (!this->appContext_) {
             spdlog::error("[{}]AppContext 创建失败", this->Get_ClassName());
             this->context_.Get_RunningState() = false;
@@ -32,6 +35,10 @@ namespace app::scene {
         inputManager.OnAction("Attack").connect<&AppScene::OnAttack>(this);
         inputManager.Add_Action("Jump", "SPACE");
         inputManager.OnAction("Jump", engine::input::ActionState::RELEASED).connect<&AppScene::OnJump>(this);
+        auto midMap = this->registry_.ctx().emplace<tiled::MapManager>();
+        midMap.Init(*this->appContext_);
+        auto midTestUi = std::make_unique<ui::TestUi>("测试", *this->appContext_);
+        this->uiManager_->Push_UI(std::move(midTestUi));
     }
 
     void AppScene::Update(float deltaTime) {
@@ -49,7 +56,7 @@ namespace app::scene {
             /* 添加一个停靠节点 */
             ImGui::DockBuilderAddNode(this->dockSpaceId_, ImGuiDockNodeFlags_DockSpace);
             ImGui::DockBuilderSetNodeSize(this->dockSpaceId_, ImGui::GetMainViewport()->WorkSize);
-                                                                        /* 固定的宽度/视口的宽度 */
+            /* 固定的宽度/视口的宽度 */
             ImGui::DockBuilderSplitNode(this->dockSpaceId_, ImGuiDir_Left, 55.f / viewport->Size.x, &dockIdLeft, &dockIdMain);
             ImGui::DockBuilderDockWindow("导航栏", dockIdLeft);
             ImGui::DockBuilderDockWindow("主界面", dockIdMain);

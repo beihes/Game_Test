@@ -4,8 +4,8 @@
 extern "C" {
 #endif // __cplusplus
 #include <SDL3/SDL.h>
-// #include <SDL3_image/SDL_image.h>
-    // #include <SDL3_ttf/SDL_ttf.h>
+    // #include <SDL3_image/SDL_image.h>
+        // #include <SDL3_ttf/SDL_ttf.h>
 #ifdef __cplusplus
 }
 #endif // __cplusplus
@@ -31,10 +31,10 @@ namespace engine::scene {
 } // namespace engine::scene
 
 namespace app::scene {
-
+    class AppScene;
     class AppContext {
     public:
-        AppContext(engine::core::Context& context, engine::scene::SceneManager& sceneManager);
+        AppContext(AppScene& appScene, engine::core::Context& context, engine::scene::SceneManager& sceneManager);
         ~AppContext();
     public:
         engine::core::Context& Get_Context()const;
@@ -42,6 +42,8 @@ namespace app::scene {
         void Set_DockSpaceId(ImGuiID& midId);
     public:
         const std::optional<std::reference_wrapper<ImGuiID>> Get_DockSpaceId()const;
+    public:
+        AppScene& appScene_;
     private:
         std::optional<std::reference_wrapper<ImGuiID>> dockSpaceId_;
     private:

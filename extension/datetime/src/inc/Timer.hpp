@@ -58,5 +58,9 @@ namespace datetime {
         SDL_TimerCallback userCallback_ = nullptr;
     private:
         static Uint32 TimerCallbackFunction(void* userdata, SDL_TimerID timerID, Uint32 interval);
+    private:
+        const char* Get_ClassName() const {
+            return typeid(*this).name();
+        }
     };
 } // namespace datetime

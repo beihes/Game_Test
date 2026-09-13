@@ -1,12 +1,12 @@
 #include "../inc/Config.hpp"
-extern "C" {
-#include <libavutil/avutil.h>
-#include <libavutil/version.h>
-#include <libavcodec/version.h>
-#include <libavformat/version.h>
-#include <libswscale/version.h>
-#include <libswresample/version.h>
-}
+// extern "C" {
+// #include <libavutil/avutil.h>
+// #include <libavutil/version.h>
+// #include <libavcodec/version.h>
+// #include <libavformat/version.h>
+// #include <libswscale/version.h>
+// #include <libswresample/version.h>
+// }
 
 #include <glm/glm.hpp>
 #include <imgui.h>
@@ -16,7 +16,6 @@ extern "C" {
 #include <SDL3_image/SDL_image.h>
 #include <spdlog/spdlog.h>
 #include <spdlog/version.h>
-#include <unicode/uvernum.h>
 
 namespace engine::core {
     void Config::Print_All_Lib_Version() {
@@ -26,18 +25,18 @@ namespace engine::core {
         spdlog::trace("[{}]SDL_mixer 版本: {}.{}.{}", this->Get_ClassName(), SDL_MIXER_MAJOR_VERSION, SDL_MIXER_MINOR_VERSION, SDL_MIXER_MICRO_VERSION);
         spdlog::trace("[{}]SDL_net 版本: {}.{}.{}", this->Get_ClassName(), SDL_NET_MAJOR_VERSION, SDL_NET_MINOR_VERSION, SDL_NET_MICRO_VERSION);
         spdlog::trace("[{}]SDL_ttf 版本: {}.{}.{}", this->Get_ClassName(), SDL_TTF_MAJOR_VERSION, SDL_TTF_MINOR_VERSION, SDL_TTF_MICRO_VERSION);
-        spdlog::trace("[{}]libavutil 版本: {}.{}.{}", this->Get_ClassName(), LIBAVUTIL_VERSION_MAJOR, LIBAVUTIL_VERSION_MINOR, LIBAVUTIL_VERSION_MICRO);
-        spdlog::trace("[{}]libavcodec 版本: {}.{}.{}", this->Get_ClassName(), LIBAVCODEC_VERSION_MAJOR, LIBAVCODEC_VERSION_MINOR, LIBAVCODEC_VERSION_MICRO);
-        spdlog::trace("[{}]libavformat 版本: {}.{}.{}", this->Get_ClassName(), LIBAVFORMAT_VERSION_MAJOR, LIBAVFORMAT_VERSION_MINOR, LIBAVFORMAT_VERSION_MICRO);
-        spdlog::trace("[{}]libswscale 版本: {}.{}.{}", this->Get_ClassName(), LIBSWSCALE_VERSION_MAJOR, LIBSWSCALE_VERSION_MINOR, LIBSWSCALE_VERSION_MICRO);
-        spdlog::trace("[{}]libswresample 版本: {}.{}.{}", this->Get_ClassName(), LIBSWRESAMPLE_VERSION_MAJOR, LIBSWRESAMPLE_VERSION_MINOR, LIBSWRESAMPLE_VERSION_MICRO);
-        spdlog::trace("[{}]FFmpeg 版本: {}", this->Get_ClassName(), av_version_info());
+        // spdlog::trace("[{}]libavutil 版本: {}.{}.{}", this->Get_ClassName(), LIBAVUTIL_VERSION_MAJOR, LIBAVUTIL_VERSION_MINOR, LIBAVUTIL_VERSION_MICRO);
+        // spdlog::trace("[{}]libavcodec 版本: {}.{}.{}", this->Get_ClassName(), LIBAVCODEC_VERSION_MAJOR, LIBAVCODEC_VERSION_MINOR, LIBAVCODEC_VERSION_MICRO);
+        // spdlog::trace("[{}]libavformat 版本: {}.{}.{}", this->Get_ClassName(), LIBAVFORMAT_VERSION_MAJOR, LIBAVFORMAT_VERSION_MINOR, LIBAVFORMAT_VERSION_MICRO);
+        // spdlog::trace("[{}]libswscale 版本: {}.{}.{}", this->Get_ClassName(), LIBSWSCALE_VERSION_MAJOR, LIBSWSCALE_VERSION_MINOR, LIBSWSCALE_VERSION_MICRO);
+        // spdlog::trace("[{}]libswresample 版本: {}.{}.{}", this->Get_ClassName(), LIBSWRESAMPLE_VERSION_MAJOR, LIBSWRESAMPLE_VERSION_MINOR, LIBSWRESAMPLE_VERSION_MICRO);
+        // spdlog::trace("[{}]FFmpeg 版本: {}", this->Get_ClassName(), av_version_info());
         spdlog::trace("[{}]imgui 版本: {}", this->Get_ClassName(), IMGUI_VERSION);
         spdlog::trace("[{}]implot 版本: {}", this->Get_ClassName(), IMPLOT_VERSION);
         spdlog::trace("[{}]implot3d 版本: {}", this->Get_ClassName(), IMPLOT3D_VERSION);
         spdlog::trace("[{}]glm 版本: {}.{}.{}", this->Get_ClassName(), GLM_VERSION_MAJOR, GLM_VERSION_MINOR, GLM_VERSION_PATCH);
         spdlog::trace("[{}]nlohmann_json 版本: {}.{}.{}", this->Get_ClassName(), NLOHMANN_JSON_VERSION_MAJOR, NLOHMANN_JSON_VERSION_MINOR, NLOHMANN_JSON_VERSION_PATCH);
-        spdlog::trace("[{}]ICU 版本: {}.{}.{}", this->Get_ClassName(), U_ICU_VERSION_MAJOR_NUM, U_ICU_VERSION_MINOR_NUM, U_ICU_VERSION_PATCHLEVEL_NUM);
+        // spdlog::trace("[{}]ICU 版本: {}.{}.{}", this->Get_ClassName(), U_ICU_VERSION_MAJOR_NUM, U_ICU_VERSION_MINOR_NUM, U_ICU_VERSION_PATCHLEVEL_NUM);
     }
 
     void Config::Set_InitFlags(SDL_InitFlags midInitFlags) {

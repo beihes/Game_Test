@@ -1,14 +1,14 @@
 #include "../inc/Timer.hpp"
+#include <spdlog/spdlog.h>
 
 namespace datetime {
     Timer::Timer() {
-
+        spdlog::trace("[{}]Timer 构建完成", this->Get_ClassName());
     }
 
     Timer::~Timer() {
-        if (this->timerState_) {
-            this->Stop();
-        }
+        this->Stop();
+        spdlog::trace("[{}]Timer 析构完成", this->Get_ClassName());
     }
 
     bool Timer::Start(Uint32 interval) {
@@ -24,6 +24,7 @@ namespace datetime {
 
     bool Timer::Stop() {
         if (!SDL_RemoveTimer(this->timerID_)) { return false; }
+        this->userCallback_ = nullptr;
         this->timerState_ = false;
         return true;
     }

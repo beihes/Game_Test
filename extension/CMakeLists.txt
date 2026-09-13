@@ -1,15 +1,25 @@
-# sdlcpp start
-add_subdirectory("sdl")
+# datetime start
+add_subdirectory("datetime")
 
-# sdlcpp end
+# datetime end
+
+# font start
+add_subdirectory("font")
+
+# font end
+
+# raii start
+add_subdirectory("raii")
+
+# theme end
+
+# tiled start
+add_subdirectory("theme")
+
+# theme end
 
 # tiled start
 add_subdirectory("tiled")
-
-# tiled end
-
-# tiled start
-add_subdirectory("datetime")
 
 # tiled end
 
